@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Artist Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .wrapper {
+            display: flex;
+            width: 100%;
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #343a40;
+            padding: 20px;
+            position: fixed;
+        }
+        .sidebar a {
+            color: #fff;
+            display: block;
+            padding: 10px 0;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background: #495057;
+            text-decoration: none;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <nav class="sidebar">
+            <h2>Artist Dashboard</h2>
+            <a href="{% url 'main_dashboard' %}">Main Dashboard</a>
+            <a href="{% url 'upload_gospel_song' %}">Upload New Song</a>
+            <a href="{% url 'downloads' %}">Downloads</a>
+            <a href="{% url 'statistics' %}">Statistics</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </nav>
+        <div class="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

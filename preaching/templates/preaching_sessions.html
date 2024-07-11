@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preaching Sessions</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Preaching Sessions</h1>
+        <ul class="list-group">
+            {% for session in sessions %}
+            <li class="list-group-item">
+                <h5>{{ session.title }}</h5>
+                <p>{{ session.description }}</p>
+                <p><strong>Time:</strong> {{ session.get_session_time_display }} on {{ session.scheduled_date }}</p>
+                {% if session.is_live %}
+                <p><span class="badge badge-success">Live</span></p>
+                <a href="#" class="btn btn-primary">Join Session</a>
+                {% elif session.scheduled_date > now %}
+                <p><span class="badge badge-primary">Upcoming</span></p>
+                <a href="#" class="btn btn-primary">View Details</a>
+                {% else %}
+                <p><span class="badge badge-secondary">Recorded</span></p>
+                <a href="#" class="btn btn-primary">View Details</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

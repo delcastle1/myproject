@@ -1,0 +1,14 @@
+<!-- preaching/templates/upload.html -->
+
+{% extends 'base.html' %}
+{% block title %}Upload Content{% endblock %}
+
+{% block content %}
+<h2>Upload Content</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <!-- Add fields for content upload -->
+    <input type="file" name="file">
+    <button type="submit">Upload</button>
+</form>
+{% endblock %}

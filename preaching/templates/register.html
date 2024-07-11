@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #007bff; /* Blue background */
+        }
+        .register-container {
+            background-color: #28a745; /* Green background */
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+            margin-top: 5rem;
+        }
+        fieldset {
+            border: 1px solid #cccccc;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #ffffff; /* White background for fieldset */
+        }
+        fieldset legend {
+            font-size: 1.5rem;
+            padding: 0 1rem;
+            width: auto;
+        }
+        .form-group {
+            margin-bottom: 1rem; /* Space between form groups */
+        }
+        .form-group label {
+            font-weight: bold; /* Make labels bold */
+        }
+        .form-group input {
+            width: 100%; /* Full width for input fields */
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid #ced4da; /* Bootstrap default input border */
+            border-radius: 0.25rem;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .login-link a {
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <fieldset>
+            <legend class="text-center">Register</legend>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Username</label>
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}">Password</label>
+                    {{ form.password1 }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                    {{ form.password2 }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.role.id_for_label }}">Register as</label>
+                    {{ form.role }}
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </form>
+        </fieldset>
+        <div class="login-link">
+            <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        </div>
+    </div>
+</body>
+</html>

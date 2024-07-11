@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Your Website Title{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dt/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .footer-contact {
+            text-align: center;
+        }
+        .footer-contact ul {
+            list-style: none;
+            padding: 0; /* Remove default padding */
+        }
+        body {
+            background-image: url("{% static 'image/R.jpeg' %}");
+            background-size: cover; /* Cover the entire background */
+            background-position: center; /* Center the background image */
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Online Preaching</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'gospel_songs' %}">Gospel Songs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'preaching_sessions' %}">Preaching Sessions</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="trainingDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Training
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="trainingDropdown">
+                            <a class="dropdown-item" href="{% url 'bible_training' %}">Bible Training</a>
+                            <a class="dropdown-item" href="{% url 'marriage' %}">Marriage</a>
+                        </div>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <footer class="bg-light text-center text-lg-start mt-5">
+        <div class="container p-4">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <!-- Empty for now -->
+                </div>
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0 footer-contact">
+                    <h5 class="text-uppercase">Contact</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li>Phone: +250782398971</li>
+                        <li>Email: justinoscarjuniorjustinho@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(71, 13, 243, 0.05);">
+            © All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>

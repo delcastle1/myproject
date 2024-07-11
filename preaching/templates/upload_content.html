@@ -1,0 +1,21 @@
+<!-- preaching/templates/upload_content.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Content</title>
+</head>
+<body>
+    <h1>Upload Your Content</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- Add form fields for content uploading -->
+        <!-- Example: File upload field, description, etc. -->
+        <input type="file" name="file" id="file">
+        <textarea name="description" id="description" cols="30" rows="10" placeholder="Enter description"></textarea>
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>

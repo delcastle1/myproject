@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Your Website Title{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1>Welcome to Our Website!</h1>
+    <p class="lead">Learn more about our services and contact us today.</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'services' %}" role="button">Learn more</a>
+</div>
+<!-- Additional content specific to home page -->
+{% endblock %}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .wrapper {
+            display: flex;
+            width: 100%;
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #343a40;
+            padding: 20px;
+            position: fixed;
+        }
+        .sidebar a {
+            color: #fff;
+            display: block;
+            padding: 10px 0;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background: #495057;
+            text-decoration: none;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            width: 100%;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <nav class="sidebar">
+            <h2>Artist Dashboard</h2>
+            <a href="{% url 'artist_dashboard' %}">Main Dashboard</a>
+            <a href="{% url 'upload_gospel_song' %}">Upload New Song</a>
+        
+            <a href="{% url 'downloads' %}">Downloads</a>
+            <a href="{% url 'statistics' %}">Statistics</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </nav>
+        <div class="content">
+            <h1 class="text-center">Statistics</h1>
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Total Songs Uploaded: {{ total_songs }}</h3>
+                        <h3>Total Visitors: {{ total_visitors }}</h3>
+                        <h3>Total Downloads: {{ total_downloads }}</h3>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Monthly Uploads</h3>
+                        <canvas id="monthlyUploadsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Parse JSON data for Chart.js
+        var months = JSON.parse('{{ months_json|safe }}');
+        var counts = JSON.parse('{{ counts_json|safe }}');
+
+        // Chart.js configuration
+        var ctx = document.getElementById('monthlyUploadsChart').getContext('2d');
+        var monthlyUploadsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Monthly Uploads',
+                    data: counts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preacher Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .wrapper {
+            display: flex;
+            width: 100%;
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #343a40;
+            padding: 20px;
+            position: fixed;
+        }
+        .sidebar a {
+            color: #fff;
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background: #495057;
+            text-decoration: none;
+        }
+        .sidebar a .fa {
+            margin-right: 10px;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <nav class="sidebar">
+            <h2>Preacher Dashboard</h2>
+            <a href="{% url 'preacher_dashboard' %}"><i class="fa fa-home"></i> Main Dashboard</a>
+            <a href="{% url 'preaching_sessions' %}"><i class="fa fa-chalkboard-teacher"></i> Preaching Sessions</a>
+            <a href="{% url 'upload_preaching' %}"><i class="fa fa-upload"></i> Upload Preaching</a>
+            <a href="{% url 'record_preaching' %}"><i class="fa fa-microphone-alt"></i> Record Preaching</a>
+            <a href="{% url 'logout' %}"><i class="fa fa-sign-out-alt"></i> Logout</a>
+        </nav>
+        <div class="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</body>
+</html>

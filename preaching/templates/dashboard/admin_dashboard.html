@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .wrapper {
+            display: flex;
+            width: 100%;
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #343a40;
+            padding: 20px;
+            position: fixed;
+        }
+        .sidebar a {
+            color: #fff;
+            display: block;
+            padding: 10px 0;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background: #495057;
+            text-decoration: none;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <nav class="sidebar">
+            <h2>Admin Dashboard</h2>
+            <a href="{% url 'admin_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard Home</a>
+            <a href="{% url 'gospel_songs' %}"><i class="fas fa-music"></i>Manage Gospel Songs</a>
+            <a href="{% url 'preaching_sessions' %}"><i class="fas fa-church"></i>Manage Preaching Sessions</a>
+            <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+        </nav>
+        <div class="content">
+            <div class="container mt-5">
+                <h1>Admin Dashboard</h1>
+                
+                <h2>Gospel Songs</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Artist</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for song in songs %}
+                        <tr>
+                            <td>{{ song.title }}</td>
+                            <td>{{ song.artist.username }}</td>
+                            <td>{{ song.status }}</td>
+                            <td>
+                                <form action="{% url 'update_song_status' song.id %}" method="post">
+                                    {% csrf_token %}
+                                    <select name="status" class="form-control">
+                                        <option value="pending" {% if song.status == 'pending' %}selected{% endif %}>Pending</option>
+                                        <option value="accepted" {% if song.status == 'accepted' %}selected{% endif %}>Accepted</option>
+                                        <option value="rejected" {% if song.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary mt-2">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                <h2>Preaching Sessions</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Preacher</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for preaching in preachings %}
+                        <tr>
+                            <td>{{ preaching.title }}</td>
+                            <td>{{ preaching.preacher.username }}</td>
+                            <td>{{ preaching.status }}</td>
+                            <td>
+                                <form action="{% url 'update_preaching_status' preaching.id %}" method="post">
+                                    {% csrf_token %}
+                                    <select name="status" class="form-control">
+                                        <option value="pending" {% if preaching.status == 'pending' %}selected{% endif %}>Pending</option>
+                                        <option value="accepted" {% if preaching.status == 'accepted' %}selected{% endif %}>Accepted</option>
+                                        <option value="rejected" {% if preaching.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary mt-2">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Gospel Songs{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-primary">
+    <h1 class="text-center">Gospel Songs</h1>
+    
+    
+    <ul class="list-group">
+        {% for song in songs %}
+        <li class="list-group-item">
+            <h5>{{ song.title }} by {{ song.artist }}</h5>
+            {% if song.media_type == 'audio' %}
+            <audio controls data-artist-id="{{ song.artist.id }}">
+                <source src="{{ song.file.url }}" type="audio/mp3">
+                Your browser does not support the audio element.
+            </audio>
+            {% elif song.media_type == 'video' %}
+            <video controls width="320" height="240" data-artist-id="{{ song.artist.id }}">
+                <source src="{{ song.file.url }}" type="video/mp4">
+                Your browser does not support the video element.
+            </video>
+            {% endif %}
+            <p>Uploaded on {{ song.upload_date }}</p>
+            <a href="{{ song.file.url }}" class="btn btn-primary">Download</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var audios = document.querySelectorAll('audio');
+        var videos = document.querySelectorAll('video');
+
+        function incrementVisitorCount(artistId) {
+            fetch(`/increment_visitor_count/${artistId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Visitor count incremented:', data);
+            })
+            .catch(error => {
+                console.error('Error incrementing visitor count:', error);
+            });
+        }
+
+        audios.forEach(audio => {
+            audio.addEventListener('play', function() {
+                var artistId = this.getAttribute('data-artist-id');
+                incrementVisitorCount(artistId);
+            });
+        });
+
+        videos.forEach(video => {
+            video.addEventListener('play', function() {
+                var artistId = this.getAttribute('data-artist-id');
+                incrementVisitorCount(artistId);
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'Dashboard/artist_dashboard.html' %}
+
+{% block title %}Main Dashboard{% endblock %}
+
+{% block content %}
+    <h1>Welcome to the Main Dashboard, {{ request.user.username }}!</h1>
+    
+    {% if songs %}
+        <div class="container mt-5">
+            <h2>Total Songs Uploaded: {{ song_count }}</h2>
+            
+            <!-- Displaying songs -->
+            <div class="row">
+                {% for song in songs %}
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ song.title }}</h5>
+                                <p class="card-text">Artist: {{ song.artist }}</p>
+                                <p class="card-text">Media Type: {{ song.get_media_type_display }}</p>
+                                <p class="card-text">Uploaded on: {{ song.upload_date }}</p>
+                                <!-- Example: Display media content based on song type -->
+                                {% if song.media_type == 'audio' %}
+                                    <audio controls>
+                                        <source src="{{ song.file.url }}" type="audio/mp3">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                {% elif song.media_type == 'video' %}
+                                    <video controls width="320" height="240">
+                                        <source src="{{ song.file.url }}" type="video/mp4">
+                                        Your browser does not support the video element.
+                                    </video>
+                                {% endif %}
+                                <!-- Action buttons -->
+                             
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <p>You haven't uploaded any songs yet. <a href="{% url 'upload_gospel_song' %}">Upload a new song</a> to get started!</p>
+    {% endif %}
+{% endblock %}
