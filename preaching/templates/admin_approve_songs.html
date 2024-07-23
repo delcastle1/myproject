@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Pending Gospel Songs</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Artist</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for song in songs %}
+      <tr>
+        <td>{{ song.title }}</td>
+        <td>{{ song.artist.username }}</td>
+        <td>{{ song.status }}</td>
+        <td>
+          <form action="{% url 'update_song_status' song.id %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <select name="status" class="form-control">
+              <option value="pending" {% if song.status == 'pending' %}selected{% endif %}>Pending</option>
+              <option value="accepted" {% if song.status == 'accepted' %}selected{% endif %}>Accepted</option>
+              <option value="rejected" {% if song.status == 'rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+            <button type="submit" class="btn btn-primary mt-2">Update</button>
+          </form>
+          <form action="{% url 'delete_song' song.id %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger mt-2">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

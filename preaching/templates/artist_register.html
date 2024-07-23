@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Artist Register{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card bg-success" style="max-width: 400px; margin: 0 auto;">
+        <div class="card-body">
+            <h1 class="text-center text-white">Artist Register</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-light btn-block">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

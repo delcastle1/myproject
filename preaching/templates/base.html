@@ -3,83 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Your Website Title{% endblock %}</title>
+    <title>{% block title %}Online Preaching{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dt/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
+        body {
+            background-color: green;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .content-wrapper {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            margin-top: 20px;
+        }
         .footer-contact {
             text-align: center;
+            background-color: green;
         }
         .footer-contact ul {
             list-style: none;
-            padding: 0; /* Remove default padding */
+            padding: 0;
         }
-        body {
-            background-image: url("{% static 'image/R.jpeg' %}");
-            background-size: cover; /* Cover the entire background */
-            background-position: center; /* Center the background image */
+        .footer {
+            padding: 10px;
+            margin-bottom: auto;
+            text-align: center;
+            text-decoration: none;
+            background-color: aqua;
+        }
+        .section-title {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        .social-icons a {
+            margin: 0 10px;
+            color: #333;
+        }
+        .card-section {
+            margin-bottom: 20px;
+        }
+        .card-section .card {
+            background-color: blueviolet;
+        }
+        .card-section .card-title {
+            color: white;
+        }
+        .card-section .card-text {
+            color: white;
+        }
+        .card-section .btn-outline-light {
+            color: white;
+            border-color: white;
+        }
+        .card-section .btn-outline-light:hover {
+            color: blueviolet;
+            background-color: white;
         }
     </style>
 </head>
-<body>
-    
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">Online Preaching</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'gospel_songs' %}">Gospel Songs</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'preaching_sessions' %}">Preaching Sessions</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="trainingDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Training
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="trainingDropdown">
-                            <a class="dropdown-item" href="{% url 'bible_training' %}">Bible Training</a>
-                            <a class="dropdown-item" href="{% url 'marriage' %}">Marriage</a>
+<body class="d-flex flex-column min-vh-100">
+    <header class="bg-success">
+        <div class="container-fluid p-0">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light w-100">
+                <div class="container-fluid bg-success mb-md-0.9 p-3 w-100">
+                    <a class="navbar-brand bg-info text-primary" href="{% url 'home' %}">Online Preaching</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'home' %}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'gospel_songs' %}">Gospel Songs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'preaching_sessions' %}">Preaching Sessions</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="trainingDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Training
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="trainingDropdown">
+                                    <a class="dropdown-item" href="#">Bible Training</a>
+                                    <a class="dropdown-item" href="#">Marriage</a>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'register' %}">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><i class="fas fa-search"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main class="flex-grow-1">
+        <div class="content-wrapper">
+            <h1 class="display-4 text-primary">Welcome to Online Preaching</h1>
+            <p class="lead">Spread the Word, Share the Love</p>
+            <hr class="my-4">
+            <p>Join us in our mission to bring faith and inspiration to people around the world.</p>
+            <a class="btn btn-primary btn-lg" href="{% url 'preaching_sessions' %}" role="button">Watch Latest Sermons</a>
+
+            <div class="card-section">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Popular</h5>
+                        <p class="card-text">Check out the most popular content that our community loves.</p>
+                        <a href="{% url 'popular' %}" class="btn btn-outline-light">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-section">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">New</h5>
+                        <p class="card-text">Discover the latest additions to our collection.</p>
+                        <a href="{% url 'new' %}" class="btn btn-outline-light">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-section">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Recent</h5>
+                        <p class="card-text">Explore the most recent uploads and stay updated.</p>
+                        <a href="{% url 'recent' %}" class="btn btn-outline-light">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-section">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Trending</h5>
+                        <p class="card-text">See what's trending right now in the world of online preaching.</p>
+                        <a href="{% url 'trending' %}" class="btn btn-outline-light">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Gospel Songs</h5>
+                            <p class="card-text">Listen to uplifting gospel music that touches the soul.</p>
+                            <a href="{% url 'gospel_songs' %}" class="btn btn-outline-primary">Explore Songs</a>
                         </div>
-                    </li>
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
-                    </li>
-                    {% endif %}
-                </ul>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Bible Training</h5>
+                            <p class="card-text">Deepen your understanding of the scriptures through our training sessions.</p>
+                            <a href="#" class="btn btn-outline-primary">Start Learning</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Marriage Counseling</h5>
+                            <p class="card-text">Strengthen your relationship with faith-based marriage guidance.</p>
+                            <a href="#" class="btn btn-outline-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
-    <div class="container mt-4">
-        {% block content %}
-        {% endblock %}
-    </div>
-    <footer class="bg-light text-center text-lg-start mt-5">
+    </main>
+
+    <footer class="bg-success text-center text-lg-start mt-5">
         <div class="container p-4">
             <div class="row">
                 <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                    <!-- Empty for now -->
+                    <h5 class="text-uppercase">About Us</h5>
+                    <p>
+                        Online Preaching is dedicated to spreading the word of God and providing spiritual guidance to people around the world.
+                    </p>
                 </div>
-                <div class="col-lg-6 col-md-12 mb-4 mb-md-0 footer-contact">
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
                     <h5 class="text-uppercase">Contact</h5>
                     <ul class="list-unstyled mb-0">
                         <li>Phone: +250782398971</li>
@@ -88,9 +208,37 @@
                 </div>
             </div>
         </div>
-        <div class="text-center p-3" style="background-color: rgba(71, 13, 243, 0.05);">
-            © All rights reserved.
+        <div class="text-center p-4">
+            <div class="mb-2">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+            <p class="text-uppercase mb-0">
+                © 2024 Online Preaching. All rights reserved.
+            </p>
         </div>
     </footer>
+    
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("a").on('click', function(event) {
+                if (this.hash !== "") {
+                    event.preventDefault();
+                    var hash = this.hash;
+                    $('html, body').animate({
+                        scrollTop: $(hash).offset().top
+                    }, 800, function(){
+                        window.location.hash = hash;
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

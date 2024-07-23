@@ -1,72 +1,34 @@
-from django.db.models import Count, Sum
-import json
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required,user_passes_test
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login, authenticate, logout
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import QuizForm, UserLoginForm, UserRegistrationForm, GospelSongForm, PreachingSessionForm
-from .models import GospelSong, Preacher, PreachingSession
-from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import get_object_or_404
-from .models import Visitor
-from django.contrib.auth.models import User
+from .forms import CustomUserCreationForm, UserLoginForm, GospelSongForm, PreachingSessionForm, PreacherRegistrationForm, UserRegistrationForm,AuthenticationForm
+from .models import GospelSong, PreacherProfile, PreachingSession,CustomUser
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from preaching.models import GospelSong, Visitor
 from django.db.models import Count, Sum
-import json
 from django.db.models.functions import ExtractMonth
+import json
+from django.contrib.auth import login as auth_login
+from django.contrib.auth.decorators import user_passes_test
 
-def user_register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            role = form.cleaned_data['role']
 
-            # Create the user
-            user = User.objects.create_user(username=username, password=password)
-
-            # Log in the user after registration
-            login(request, user)
-
-            # Redirect based on user role
-            if role == 'preacher':
-                return redirect('preacher_dashboard')
-            elif role == 'artist':
-                return redirect('artist_dashboard')
-            elif role == 'admin':
-                return redirect('admin_dashboard')
-            else:
-                return redirect('home')
-    else:
-        form = UserRegistrationForm()
-
-    return render(request, 'register.html', {'form': form})
 def user_login(request):
     if request.method == 'POST':
-        form = UserLoginForm(request, data=request.POST)
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                if user.is_superuser:
-                    return redirect('admin_dashboard')
-                elif user.groups.filter(name='preacher').exists():
-                    return redirect('preacher_dashboard')
-                elif user.groups.filter(name='artist').exists():
-                    return redirect('artist_dashboard')
-                else:
-                    return redirect('home')
-            else:
-                messages.error(request, 'Invalid username or password.')
+            user = form.get_user()
+            auth_login(request, user)
+            return redirect_to_dashboard(user)
+        else:
+            messages.error(request, 'Invalid username or password.')
     else:
-        form = UserLoginForm()
-
+        form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect('home')
 
 @login_required
 def upload_content(request):
@@ -74,9 +36,6 @@ def upload_content(request):
         return redirect('home')
     else:
         return render(request, 'upload.html')
-
-
-
 
 def home(request):
     return render(request, 'home.html')
@@ -91,65 +50,19 @@ def contact(request):
     return render(request, 'contact.html')
 
 @login_required
-def upload_content(request):
-    if request.method == 'POST':
-        pass
-    else:
-        return render(request, 'upload_content.html')
-
-@login_required
-def upload_gospel_song(request):
-    if request.method == 'POST':
-        form = GospelSongForm(request.POST, request.FILES)
-        if form.is_valid():
-            song = form.save(commit=False)
-            song.artist = request.user.username  # Assign the current user as the artist
-            song.save()
-            return redirect('artist_dashboard')  # Redirect to artist dashboard after successful upload
-    else:
-        form = GospelSongForm()
-    
-    return render(request, 'upload_gospel_song.html', {'form': form})
-
-def gospel_songs(request):
-    songs = GospelSong.objects.all()
-    return render(request, 'gospel_songs.html', {'songs': songs})
-
-def bible_studies(request):
-    return render(request, 'bible_studies.html')
-
-def bible_training(request):
-    if request.method == 'POST':
-        form = QuizForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('bible_training')
-    else:
-        form = QuizForm()
-    return render(request, 'bible_training.html', {'form': form})
-
-@login_required
-def mindeducation(request):
-    return render(request, 'marriage.html')
-
-@login_required
 def schedule_session(request):
     if request.method == 'POST':
         form = PreachingSessionForm(request.POST)
         if form.is_valid():
             session = form.save(commit=False)
-            session.preacher = Preacher.objects.get(user=request.user)
+            session.preacher = PreacherProfile.objects.get(user=request.user)
             session.save()
             return redirect('preaching_sessions')
     else:
         form = PreachingSessionForm()
     return render(request, 'schedule_session.html', {'form': form})
 
-
-
-
 def artist_dashboard(request):
-    # Fetch data as needed for the artist dashboard
     songs = GospelSong.objects.filter(artist=request.user)
     song_count = songs.count()
 
@@ -158,35 +71,15 @@ def artist_dashboard(request):
         'song_count': song_count,
     })
 
-@csrf_exempt
-def increment_visitor_count(request, artist_id):
-    artist = get_object_or_404(User, id=artist_id)
-    visitor, created = Visitor.objects.get_or_create(artist=artist)
-    visitor.count += 1
-    visitor.save()
-    return JsonResponse({'status': 'success', 'visitor_count': visitor.count})
-
-
-
-@login_required
-def downloads(request):
-    if request.user.userprofile.role != 'artist':
-        return redirect('home')
-
-    # Implement your download logic here
-    return render(request, 'dashboard/downloads.html')
 @login_required
 def statistics(request):
-    if request.user.userprofile.role != 'artist':
+    if request.user.role != 'artist':
         return redirect('home')
 
     artist = request.user
 
     # Total number of songs uploaded by the artist
     total_songs = GospelSong.objects.filter(artist=artist).count()
-
-    # Total number of visitors who have accessed the artist's songs
-    total_visitors = Visitor.objects.filter(artist=artist).count()
 
     # Total number of downloads across all songs
     total_downloads = GospelSong.objects.filter(artist=artist).aggregate(total_downloads=Sum('download_count'))['total_downloads'] or 0
@@ -207,50 +100,33 @@ def statistics(request):
 
     return render(request, 'dashboard/statistics.html', {
         'total_songs': total_songs,
-        'total_visitors': total_visitors,
         'total_downloads': total_downloads,
         'months_json': months_json,
         'counts_json': counts_json,
     })
 
 def main_dashboard(request):
-    # Retrieve Gospel songs uploaded by the current user
     songs = GospelSong.objects.filter(artist=request.user)
-    
-    # Example: Other data you may want to display on the main dashboard
     song_count = songs.count()
-    
+
     return render(request, 'dashboard/main_dashboard.html', {
         'songs': songs,
         'song_count': song_count,
-        # Add other context variables as needed
     })
-
-
 
 def preacher_dashboard(request):
     return render(request, 'dashboard/preacher_dashboard.html')
 
 def preaching_sessions(request):
-    # Add logic to handle preaching sessions
     return render(request, 'dashboard/preaching_sessions.html')
 
 def upload_preaching(request):
-    # Handle uploading of preaching sessions
-    if request.method == 'POST':
-        # Handle form submission and saving
-        pass  # Add your implementation here
     return render(request, 'dashboard/upload_preaching.html')
 
 def record_preaching(request):
-    # Handle recording of preaching sessions
-    if request.method == 'POST':
-        # Handle form submission and saving
-        pass  # Add your implementation here
     return render(request, 'dashboard/record_preaching.html')
 
 @login_required
-
 def admin_dashboard(request):
     songs = GospelSong.objects.all()
     preachings = PreachingSession.objects.all()
@@ -261,22 +137,95 @@ def admin_dashboard(request):
     }
     return render(request, 'dashboard/admin_dashboard.html', context)
 
+
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            role = form.cleaned_data.get('role')
+            user.save()
+            if role == 'preacher':
+                user.is_preacher = True
+            elif role == 'artist':
+                user.is_artist = True
+            user.save()
+            login(request, user)
+            return redirect_to_dashboard(user)
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'register.html', {'form': form})
+def redirect_to_dashboard(user):
+    if user.is_staff:
+        return redirect('admin_dashboard')
+    elif user.is_preacher:
+        return redirect('preacher_dashboard')
+    elif user.is_artist:
+        return redirect('artist_dashboard')
+    else:
+        return redirect('home')
+
+def trending(request):
+ return render(request,  'trending.html')
+
+def popular(request):
+ return render(request,  'popular.html')
+
+def new(request):
+ return render(request,  'new.html')
+
+def recent(request):
+ return render(request,  'recent.html')
+
+def search(request):
+ return render(request,  'search.html')
+
+
+def downloads(request):
+    return render(request, 'downloads.html')
+
+@login_required
+def upload_gospel_song(request):
+    if request.method == 'POST':
+        form = GospelSongForm(request.POST, request.FILES)
+        if form.is_valid():
+            song = form.save(commit=False)
+            song.artist = request.user
+            song.save()
+            return redirect('artist_dashboard')
+    else:
+        form = GospelSongForm()
+    
+    return render(request, 'upload_gospel_song.html', {'form': form})
+
+def gospel_songs(request):
+    songs = GospelSong.objects.filter(is_approved=True)
+    return render(request, 'gospel_songs.html', {'songs': songs})
+
+
+
+def is_admin(user):
+    return user.is_superuser
+
+@user_passes_test(is_admin)
+def admin_approve_songs(request):
+    songs = GospelSong.objects.filter(is_approved=False)
+    return render(request, 'admin_approve_songs.html', {'songs': songs})
+
 @login_required
 def update_song_status(request, song_id):
+    song = get_object_or_404(GospelSong, id=song_id)
     if request.method == 'POST':
         status = request.POST.get('status')
-        song = GospelSong.objects.get(pk=song_id)
         song.status = status
         song.save()
-        messages.success(request, 'Song status updated successfully')
+        messages.success(request, 'Song status updated successfully!')
     return redirect('admin_dashboard')
 
 @login_required
-def update_preaching_status(request, preaching_id):
+def delete_song(request, song_id):
+    song = get_object_or_404(GospelSong, id=song_id)
     if request.method == 'POST':
-        status = request.POST.get('status')
-        preaching = PreachingSession.objects.get(pk=preaching_id)
-        preaching.status = status
-        preaching.save()
-        messages.success(request, 'Preaching status updated successfully')
+        song.delete()
+        messages.success(request, 'Song deleted successfully!')
     return redirect('admin_dashboard')

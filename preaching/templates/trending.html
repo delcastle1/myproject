@@ -1,0 +1,20 @@
+<!-- templates/trending.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Trending Songs</h2>
+    <ul>
+        {% for song in trending_songs %}
+        <li>{{ song.title }} by {{ song.artist.username }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Trending Preachings</h2>
+    <ul>
+        {% for preaching in trending_preachings %}
+        <li>{{ preaching.title }} by {{ preaching.preacher.username }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

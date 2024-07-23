@@ -1,17 +1,17 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
-from .models import GospelSong,Preacher, PreachingSession, Quiz
+from django.conf import settings
+from .models import GospelSong, PreacherProfile, PreachingSession, CustomUser
 
 class UserLoginForm(AuthenticationForm):
     username = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
     class Meta:
-        model = User
+        model = settings.AUTH_USER_MODEL
         fields = ['username', 'password']
 
-class UserRegistrationForm(UserCreationForm):
+class CustomUserCreationForm(UserCreationForm):
     USER_ROLES = [
         ('preacher', 'Preacher'),
         ('artist', 'Artist'),
@@ -24,7 +24,7 @@ class UserRegistrationForm(UserCreationForm):
     password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = ['username', 'email', 'password1', 'password2', 'role']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
@@ -33,25 +33,11 @@ class UserRegistrationForm(UserCreationForm):
 class GospelSongForm(forms.ModelForm):
     class Meta:
         model = GospelSong
-        fields = ['title', 'artist', 'media_type', 'file']
+        fields = ['title', 'media_type', 'file']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'artist': forms.TextInput(attrs={'class': 'form-control'}),
             'media_type': forms.Select(attrs={'class': 'form-control'}),
             'file': forms.FileInput(attrs={'class': 'form-control-file'}),
-        }
-
-class QuizForm(forms.ModelForm):
-    class Meta:
-        model = Quiz
-        fields = ['question', 'option1', 'option2', 'option3', 'option4', 'correct_option']
-        widgets = {
-            'question': forms.TextInput(attrs={'class': 'form-control'}),
-            'option1': forms.TextInput(attrs={'class': 'form-control'}),
-            'option2': forms.TextInput(attrs={'class': 'form-control'}),
-            'option3': forms.TextInput(attrs={'class': 'form-control'}),
-            'option4': forms.TextInput(attrs={'class': 'form-control'}),
-            'correct_option': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 class PreachingSessionForm(forms.ModelForm):
@@ -68,10 +54,18 @@ class PreachingSessionForm(forms.ModelForm):
 
 class PreacherRegistrationForm(forms.ModelForm):
     class Meta:
-        model = Preacher
+        model = PreacherProfile
         fields = ['name', 'image', 'description']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'image': forms.URLInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
         }
+
+class UserRegistrationForm(UserCreationForm):
+    is_preacher = forms.BooleanField(required=False, label='Register as Preacher')
+    is_artist = forms.BooleanField(required=False, label='Register as Artist')
+
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'is_preacher', 'is_artist', 'password1', 'password2']
